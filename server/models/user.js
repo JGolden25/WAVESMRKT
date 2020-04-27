@@ -4,7 +4,7 @@ const userSchema = mongoose.Schema({
     email:{
         type:String,
         required: true,
-        trim:true,
+        trim: true,
         unique: 1
     },
     password:{
@@ -30,14 +30,14 @@ const userSchema = mongoose.Schema({
         type:Array,
         default: []
     },
-     role:{
-         type:Number,
-         default:0
-     },
-     token:{
-         type:String
-     }
-})
+    role:{
+        type:Number,
+        default:0
+    },
+    token:{
+        type:String
+    }
+});
 
 const User = mongoose.model('User', userSchema);
 
