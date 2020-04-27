@@ -44,6 +44,7 @@ const userSchema = mongoose.Schema({
 userSchema.pre('save',function(next){
     var user = this;
 
+    if(user.isModified()){
     bcrypt.genSalt(SALT_I,function(err,salt){
         if(err) return next(err)
 
@@ -51,9 +52,14 @@ userSchema.pre('save',function(next){
             if(err) return next(err);
             user.password = hash;
             next();
-        })
+        });
     })
+}
+else{
+    next()
+}
 })
+
 
 
 

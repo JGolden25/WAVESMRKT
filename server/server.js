@@ -31,6 +31,10 @@ app.post('/api/users/register',(req,res)=>{
     })
 })
 
+app.post('/api/users/login',(req,res)=>{
+    //find email
+})
+
 const port = process.env.PORT || 3002;
 app.listen(port,()=>{
     console.log(`Server Running at ${port}`)
