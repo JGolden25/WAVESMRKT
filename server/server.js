@@ -28,7 +28,7 @@ const { admin } = require('./middleware/admin');
 
 //Products//
 //by arrival
-//?sortBy=createdAt&order=desc&limit=4 after desc can be removed for no limit
+//?sortBy=createdAt&order=desc&limit=4 after desc can be removed for no0 limit
 
 //by sell
 //?sortBy=sold&order=desc&limit=100&skip=5 after desc can be removed for no limit
