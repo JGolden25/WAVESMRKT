@@ -11,7 +11,7 @@ const productSchema = mongoose.Schema({
     description:{
         required: true,
         type: String,
-        maxlength:1000000
+        maxlength:100000
     },
     price:{
         required: true,
@@ -56,4 +56,4 @@ const productSchema = mongoose.Schema({
 },{timestamps: true});
 
 const Product = mongoose.model('Product',productSchema);
-module.export = { Product }
+module.exports = { Product }
