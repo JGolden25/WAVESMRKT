@@ -7,7 +7,7 @@ import Routes from './routes';
 import { Provider } from 'react-redux';
 import { createStore, applyMiddleware } from 'redux';
 import promiseMiddleware from 'redux-promise';
-import ReduxThunk from 'redux-think';
+import ReduxThunk from 'redux-thunk';
 
 
 ReactDOM.render(
