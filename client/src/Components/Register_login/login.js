@@ -7,8 +7,8 @@ class Login extends Component {
 
     state = {
         formError: false,
-        forSuccess:'',
-        fordata:{
+        formSuccess:'',
+        formdata:{
             email: {
                 element: 'input',
                 value: '',
@@ -55,7 +55,7 @@ submitForm= () =>{
     render() {
         return (
             <div classname = "signin_wrapper">
-                <form onSubmit={(event)=> this.submitform(event)}>
+                <form onSubmit={(event)=> this.submitForm(event)}>
                     <FormField
                     id={'email'}
                     formdata={this.state.formdata.email}
