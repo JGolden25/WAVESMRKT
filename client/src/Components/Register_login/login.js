@@ -54,7 +54,7 @@ submitForm= () =>{
 
     render() {
         return (
-            <div classname = "signin_wrapper">
+            <div className = "signin_wrapper">
                 <form onSubmit={(event)=> this.submitForm(event)}>
                     <FormField
                     id={'email'}

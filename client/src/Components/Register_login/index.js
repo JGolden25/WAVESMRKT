@@ -4,10 +4,10 @@ import Login from './login';
 
 const RegisterLogin = () => {
     return (
-        <div classname="page_wrapper">
-            <div classname="container">
-                <div classname="register_login_container">
-                    <div classname="left">
+        <div className="page_wrapper">
+            <div className="container">
+                <div className="register_login_container">
+                    <div className="left">
                         <h1>New Customers</h1>
                         <p>Lorem ipsum dolor</p>
                         <MyButton
@@ -19,7 +19,7 @@ const RegisterLogin = () => {
                             }}
                         />
                     </div>
-                    <div classname="right">
+                    <div className="right">
                             <h2>Registered customers</h2>
                             <p>if you have an account,please log in.</p>
                             <Login/>
