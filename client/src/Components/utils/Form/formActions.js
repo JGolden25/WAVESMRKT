@@ -39,3 +39,22 @@ export const update = (element, formdata, formName) => {
 
     return newFormdata;
 }
+
+export const generateData = (formdata,formName) =>{
+    let dataToSubmit = {};
+
+    for(let key in formdata){
+      dataToSubmit[key] = formdata[key].value;
+    }
+
+    return dataToSubmit;
+}
+
+export const isFormValid = (formdata, formName) => {
+    let formIsValid = true;
+
+    for(let key in formdata){
+        formIsValid = formdata[key].valid && formIsValid
+    }
+    return formIsValid;
+}
