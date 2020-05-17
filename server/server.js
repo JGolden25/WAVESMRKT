@@ -141,7 +141,7 @@ app.post('/api/product/wood',auth,admin,(req,res)=>{
         if(err) return res.json({success:false,err});
         res.status(200).json({
             success:true,
-            brand: doc
+            wood: doc
 
         })
     })
