@@ -4,7 +4,8 @@ import {
     REGISTER_USER,
     AUTH_USER,
     LOGOUT_USER,
-    ADD_TO_CART_USER
+    ADD_TO_CART_USER,
+    GET_CART_ITEMS_USER
 } from './types';
 
 import { USER_SERVER } from '../Components/utils/misc';
@@ -60,4 +61,27 @@ export function addToCart(_id){
         type: ADD_TO_CART_USER,
         payload:request
     }
+}
+
+export function getCartItems(cartItems, userCart){
+
+    const request = axios.get(`${PRODUCT_SERVER}/articles_by_id?id=${cartItems}&type=array`)
+                    .then(response => {
+     
+                        userCart.forEach(item=>{
+                            response.data.forEach((k,i)=>{
+                                if(item.id === k._id){
+                                    response.data[i].quantity = item.quantity;
+                                }
+                            })
+                        })
+                        return response.data;
+                    })
+                 
+
+    return {
+        type: GET_CART_ITEMS_USER,
+        payload: request
+    }
+
 }
