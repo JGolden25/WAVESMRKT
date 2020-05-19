@@ -6,6 +6,7 @@ import Home from './Components/Home';
 import RegisterLogin from './Components/Register_login';
 import Register from './Components/Register_login/register';
 import Shop from './Components/Shop';
+import ProductPage from './Components/Product';
 
 import UserDashboard from './Components/User';
 import AddProduct from './Components/User/Admin/add_product';
@@ -18,6 +19,7 @@ const Routes = () => {
 <Route path="/user/dashboard" exact component={Auth(UserDashboard,true)}/>
 <Route path="/admin/add_product" exact component={Auth(AddProduct,true)}/>
 <Route path="/admin/manage_categories" exact component={Auth(ManageCategories,true)}/>
+<Route path="/product_detail/:id" exact component={Auth(ProductPage,null)}/>
 <Route path="/register" exact component={Auth(Register,false)}/>
 <Route path="/register_login" exact component={Auth(RegisterLogin,false)}/>
 <Route path="/shop" exact component={Auth(Shop,null)}/>
