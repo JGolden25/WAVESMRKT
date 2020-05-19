@@ -1,6 +1,9 @@
 import React, { Component } from 'react';
 import MyButton from './button';
 
+import { connect } from 'react-redux';
+import { addToCart } from '../../actions/user_actions';
+
 class Card extends Component {
     
     renderCardImage(images){
