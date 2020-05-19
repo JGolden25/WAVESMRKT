@@ -3,7 +3,8 @@ import {
     LOGIN_USER,
     REGISTER_USER,
     AUTH_USER,
-    LOGOUT_USER
+    LOGOUT_USER,
+    ADD_TO_CART_USER
 } from './types';
 
 import { USER_SERVER } from '../Components/utils/misc';
@@ -47,5 +48,12 @@ export function logoutUser(){
     return{
         type: LOGOUT_USER,
         payload: request
+    }
+}
+
+export function addToCart(_id){
+    return{
+        type: ADD_TO_CART_USER,
+        payload:''
     }
 }

@@ -255,6 +255,16 @@ app.get('/api/users/removeimage',auth,admin,(req,res)=>{
     })
 })
 
+app.post('/api/users/addToCart', auth,(req,res)=>{
+
+    User.findOne({_id: req.user._id},(err,doc)=>{
+        let duplicate = false;
+
+        doc.cart.forEach()
+    })
+
+})
+
 
 const port = process.env.PORT || 3002;
 app.listen(port,()=>{
