@@ -13,6 +13,7 @@ import AddProduct from './Components/User/Admin/add_product';
 import ManageCategories from './Components/User/Admin/manage_categories'
 import UserCart from './Components/User/cart'
 import UpdateProfile from './Components/User/update_profile';
+import ManageSite from './Components/User/Admin/manage_site';
 
 const Routes = () => {
   return(
@@ -23,6 +24,7 @@ const Routes = () => {
 <Route path="/user/user_profile" exact component={Auth(UpdateProfile,true)}/>
 <Route path="/admin/add_product" exact component={Auth(AddProduct,true)}/>
 <Route path="/admin/manage_categories" exact component={Auth(ManageCategories,true)}/>
+<Route path="/admin/site_info" exact component={Auth(ManageSite,true)}/>
 
 <Route path="/product_detail/:id" exact component={Auth(ProductPage,null)}/>
 <Route path="/register" exact component={Auth(Register,false)}/>
