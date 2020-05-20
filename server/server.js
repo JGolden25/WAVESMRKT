@@ -3,8 +3,10 @@ const bodyParser = require('body-parser');
 const cookieParser = require('cookie-parser');
 const formidable = require('express-formidable');
 const cloudinary = require('cloudinary');
+
 const app = express();
 const mongoose = require('mongoose');
+const async = require('async');
 require('dotenv').config();
 
 mongoose.Promise = global.Promise;
@@ -26,7 +28,7 @@ const { User } = require('./models/user');
 const { Brand } = require('./models/brand');
 const { Wood } = require('./models/wood');
 const { Product } = require('./models/product');
-
+const { Payment } = require('./models/payment');
 
 
 //Middlewares
@@ -292,8 +294,100 @@ app.post('/api/users/addToCart',auth,(req,res)=>{
             )
         }
     })
+});
+
+app.get('/api/users/removeFromCart',auth,(req,res)=>{
+
+    User.findOneAndUpdate(
+        {_id: req.user._id },
+        { "$pull":
+            { "cart": {"id":mongoose.Types.ObjectId(req.query._id)} }
+        },
+        { new: true },
+        (err,doc)=>{
+            let cart = doc.cart;
+            let array = cart.map(item=>{
+                return mongoose.Types.ObjectId(item.id)
+            });
+
+            Product.
+            find({'_id':{ $in: array }}).
+            populate('brand').
+            populate('wood').
+            exec((err,cartDetail)=>{
+                return res.status(200).json({
+                    cartDetail,
+                    cart
+                })
+            })
+        }
+    );
 })
 
+app.post('/api/users/successBuy',auth,(req,res)=>{
+    let history = [];
+    let transactionData = {}
+
+    // user history
+    req.body.cartDetail.forEach((item)=>{
+        history.push({
+            dateOfPurchase: Date.now(),
+            name: item.name,
+            brand: item.brand.name,
+            id: item._id,
+            price: item.price,
+            quantity: item.quantity,
+            paymentId: req.body.paymentData.paymentID
+        })
+    })
+
+    //Paymentsdash
+    transactionData.user = {
+        id: req.user._id,
+        name: req.user.name,
+        lastname: req.user.lastname,
+        email: req.user.email
+    }
+    transactionData.data = req.body.paymentData;
+    transactionData.product = history;
+        
+    User.findOneAndUpdate(
+        { _id: req.user._id },
+        { $push:{ history:history }, $set:{ cart:[] } },
+        { new: true },
+        (err,user)=>{
+            if(err) return res.json({success:false,err});
+
+            const payment = new Payment(transactionData);
+            payment.save((err,doc)=>{
+                if(err) return res.json({success:false,err});
+                let products = [];
+                doc.product.forEach(item=>{
+                    products.push({id:item.id,quantity:item.quantity})
+                 })
+              
+                async.eachSeries(products,(item,callback)=>{ 
+                    Product.update(
+                        {_id: item.id},
+                        { $inc:{
+                            "sold": item.quantity
+                        }},
+                        {new:false},
+                        callback
+                    )
+                },(err)=>{
+                    if(err) return res.json({success:false,err})
+                    res.status(200).json({
+                        success:true,
+                        cart: user.cart,
+                        cartDetail:[]
+                    })
+                })
+            });
+        }
+    )
+
+})
 
 
 const port = process.env.PORT || 3002;

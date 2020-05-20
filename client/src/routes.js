@@ -11,12 +11,14 @@ import ProductPage from './Components/Product';
 import UserDashboard from './Components/User';
 import AddProduct from './Components/User/Admin/add_product';
 import ManageCategories from './Components/User/Admin/manage_categories'
+import UserCart from './Components/User/cart'
 
 const Routes = () => {
   return(
     <Layout>
 <Switch>
 <Route path="/user/dashboard" exact component={Auth(UserDashboard,true)}/>
+<Route path="/user/cart" exact component={Auth(UserCart,true)}/>
 <Route path="/admin/add_product" exact component={Auth(AddProduct,true)}/>
 <Route path="/admin/manage_categories" exact component={Auth(ManageCategories,true)}/>
 <Route path="/product_detail/:id" exact component={Auth(ProductPage,null)}/>
