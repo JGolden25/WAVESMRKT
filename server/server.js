@@ -6,7 +6,8 @@ const cloudinary = require('cloudinary');
 const SHA1 = require("crypto-js/sha1");
 const multer = require('multer');
 const moment = require("moment");
-
+const fs = require('fs');
+const path = require('path');
 
 const app = express();
 const mongoose = require('mongoose');
@@ -20,11 +21,31 @@ app.use(bodyParser.urlencoded({extended:true}));
 app.use(bodyParser.json());
 app.use(cookieParser());
 
+app.use(express.static('client/build'))
+
 cloudinary.config({
     cloud_name:process.env.CLOUD_NAME,
     api_key:process.env.CLOUD_API_KEY,
     api_secret:process.env.CLOUD_API_SECRET
 })
+//storage multer
+let storage = multer.diskStorage({
+    destination:(req,file,cb)=>{
+        cb(null,'uploads/')
+    },
+    filename:(req,file,cb)=>{
+        cb(null,`${Date.now()}_${file.originalname}`)
+    },
+    // fileFilter:(req,file,cb)=>{
+
+    //     const ext = path.extname(file.originalname)
+    //     if(ext !== '.jpg' && ext !== '.png'){
+    //         return cb(res.status(400).end('only jpg, png is allowed'),false);
+    //     }
+
+    //     cb(null,true)
+    // }
+});
 
 //MODELS//
 
@@ -43,7 +64,28 @@ const { admin } = require('./middleware/admin');
 const { sendEmail } = require('./utils/mail/index');
 
 //adminuploads
+const upload = multer({storage:storage }).single('file')
 
+app.post('/api/users/uploadfile',auth,admin,(req,res)=>{
+    upload(req,res,(err)=>{
+        if(err){
+            return res.json({success:false,err})
+        }
+        return res.json({success:true})
+    })
+})
+
+app.get('/api/users/admin_files',auth,admin,(req,res)=>{
+    const dir = path.resolve(".")+'/uploads/';
+    fs.readdir(dir,(err,items)=>{
+        return res.status(200).send(items);
+    })
+})
+
+app.get('/api/users/download/:id',auth,admin,(req,res)=>{
+    const file = path.resolve(".")+`/uploads/${req.params.id}`;
+    res.download(file)
+})
 
 //Products//
 
@@ -377,6 +419,8 @@ app.get('/api/users/removeFromCart',auth,(req,res)=>{
 app.post('/api/users/successBuy',auth,(req,res)=>{
     let history = [];
     let transactionData = {}
+    const date = new Date();
+    const po = `PO-${date.getSeconds()}${date.getMilliseconds()}-${SHA1(req.user._id).toString().substring(0,8)}`
 
     // user history
     req.body.cartDetail.forEach((item)=>{
@@ -398,7 +442,10 @@ app.post('/api/users/successBuy',auth,(req,res)=>{
         lastname: req.user.lastname,
         email: req.user.email
     }
-    transactionData.data = req.body.paymentData;
+    transactionData.data = {
+        ...req.body.paymentData,
+        porder: po
+    };
     transactionData.product = history;
         
     User.findOneAndUpdate(

@@ -65,7 +65,7 @@ class ReserUser extends Component {
     render() {
         return (
             <div className="container">
-                <h1>Rest passwords</h1>
+                <h1>Reset password</h1>
                 <form onSubmit={(event) => this.submitForm(event)}>
 
                     <FormField
