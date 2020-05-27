@@ -3,6 +3,9 @@ const bodyParser = require('body-parser');
 const cookieParser = require('cookie-parser');
 const formidable = require('express-formidable');
 const cloudinary = require('cloudinary');
+const SHA1 = require("crypto-js/sha1");
+const multer = require('multer');
+const moment = require("moment");
 
 
 const app = express();
@@ -39,31 +42,8 @@ const { admin } = require('./middleware/admin');
 
 const { sendEmail } = require('./utils/mail/index');
 
+//adminuploads
 
-// const smtpTransport = mailer.createTransport({
-//     service:"Gmail",
-//     auth:{
-//         user:"wavesguitarsmrkt@gmail.com",
-//         pass:"wavesguitars1"
-//     }
-// });
-
-// var mail = {
-//     from:"Waves <waves.guitars.rev@gmail.com",
-//     to:"joechre@gmail.com",
-//     subject:"Send test email",
-//     text:"Testing out waves mails",
-//     html:"<b>Hello guys this works</b>"
-// }
-
-// smtpTransport.sendMail(mail,function(error,response){
-//     if(error){
-//         console.log(error);
-//     } else {
-//         console.log('email sent')
-//     }
-//     smtpTransport.close();
-// })
 
 //Products//
 
@@ -209,6 +189,45 @@ app.get('/api/product/brands',(req,res)=>{
 })
 
 //USERS//
+
+app.post('/api/users/reset_user',(req,res)=>{
+    User.findOne(
+        {'email':req.body.email},
+        (err,user)=>{
+            user.generateResetToken((err,user)=>{
+                if(err) return res.json({success:false,err});
+                sendEmail(user.email,user.name,null,"reset_password",user)
+                return res.json({success:true})
+            })
+        }
+    )
+})
+
+
+app.post('/api/users/reset_password',(req,res)=>{
+
+    var today = moment().startOf('day').valueOf();
+
+    User.findOne({
+        resetToken: req.body.resetToken,
+        resetTokenExp:{
+            $gte: today
+        }
+    },(err,user)=>{
+        if(!user) return res.json({success:false,message:'Sorry, token bad, generate a new one.'})
+    
+        user.password = req.body.password;
+        user.resetToken = '';
+        user.resetTokenExp= '';
+
+        user.save((err,doc)=>{
+            if(err) return res.json({success:false,err});
+            return res.status(200).json({
+                success: true
+            })
+        })
+    })
+})
 
 app.get('/api/users/auth',auth,(req,res)=>{
     res.status(200).json({
@@ -407,7 +426,8 @@ app.post('/api/users/successBuy',auth,(req,res)=>{
                         callback
                     )
                 },(err)=>{
-                    if(err) return res.json({success:false,err})
+                    if(err) return res.json({success:false,err});
+                    sendEmail(user.email,user.name,null,"purchase",transactionData)
                     res.status(200).json({
                         success:true,
                         cart: user.cart,
