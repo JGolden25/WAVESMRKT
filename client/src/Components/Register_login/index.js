@@ -9,7 +9,7 @@ const RegisterLogin = () => {
                 <div className="register_login_container">
                     <div className="left">
                         <h1>New Customers</h1>
-                        <p>Lorem ipsum dolor</p>
+                        <p>New customers register here to become a part of the Waves Marketplace family.</p>
                         <MyButton
                             type="default"
                             title="create an account"

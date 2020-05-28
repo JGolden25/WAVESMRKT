@@ -5,7 +5,7 @@ const HomePromotion = () => {
 
     const promotion = {
         img:'/images/featured/featured_home_3.jpg',
-        lineOne:'Up to 40% off',
+        lineOne:'Up to 25% off',
         lineTwo:'In second hand guitars',
         linkTitle:'Shop now',
         linkTo:'/shop'
