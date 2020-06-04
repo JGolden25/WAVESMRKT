@@ -27,7 +27,8 @@ cloudinary.config({
     cloud_name:process.env.CLOUD_NAME,
     api_key:process.env.CLOUD_API_KEY,
     api_secret:process.env.CLOUD_API_SECRET
-})
+});
+
 //storage multer
 let storage = multer.diskStorage({
     destination:(req,file,cb)=>{
@@ -55,7 +56,6 @@ const { Wood } = require('./models/wood');
 const { Product } = require('./models/product');
 const { Payment } = require('./models/payment');
 const { Site } = require('./models/site');
-
 
 //Middlewares
 const { auth } = require('./middleware/auth');
