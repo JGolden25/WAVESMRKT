@@ -14,7 +14,6 @@ const mongoose = require('mongoose');
 const async = require('async');
 require('dotenv').config();
 
-
 mongoose.Promise = global.Promise;
 mongoose.connect(process.env.DATABASE)
 
